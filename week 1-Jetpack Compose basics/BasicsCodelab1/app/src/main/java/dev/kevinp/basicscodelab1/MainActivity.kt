@@ -3,23 +3,18 @@ package dev.kevinp.basicscodelab1
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,7 +36,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyApp() {
 
-    var shouldShowOnboarding by remember { mutableStateOf(true) }
+    var shouldShowOnboarding by rememberSaveable { mutableStateOf(true) }
 
     if (shouldShowOnboarding) {
         OnboardingScreen(onContinueClicked = { shouldShowOnboarding = false })
@@ -93,26 +88,48 @@ fun OnboardingPreview() {
 }
 
 @Composable
-fun Greeting(name: String) {
-    val expanded = remember { mutableStateOf(false) }
-    val extraPadding = if (expanded.value) 48.dp else 0.dp
+private fun Greeting(name: String) {
 
+    var expanded by rememberSaveable { mutableStateOf(false) }
+
+    val extraPadding by animateColorAsState(
+        targetValue = if (expanded) MaterialTheme.colors.secondary
+                    else MaterialTheme.colors.error,
+        animationSpec = tween(
+            durationMillis = 500,
+            delayMillis = 100
+        )
+    )
+//    val extraPadding by animateDpAsState(
+//        if (expanded) 48.dp else 0.dp,
+//        animationSpec = tween(
+//            durationMillis = 200,
+//            delayMillis = 200
+//        )
+//        animationSpec = spring(
+//            dampingRatio = Spring.DampingRatioMediumBouncy,
+//            stiffness = Spring.StiffnessLow
+//        )
+//    )
     Surface(
         color = MaterialTheme.colors.primary,
         modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
     ) {
         Row(modifier = Modifier.padding(24.dp)) {
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(bottom = extraPadding)
+            Column(modifier = Modifier
+                .weight(1f)
+//                .padding(bottom = extraPadding.coerceAtLeast(0.dp))
+                .background(extraPadding)
             ) {
-                Text("Hello,")
-                Text(name)
+                Text(text = "Hello, ")
+                Text(text = name)
             }
-            OutlinedButton(onClick = { expanded.value = expanded.value.not() }) {
-                Text(text = if (expanded.value) "Show less!" else "Show more!")
+            OutlinedButton(
+                onClick = { expanded = !expanded }
+            ) {
+                Text(if (expanded) "Show less" else "Show more")
             }
+
         }
     }
 }
