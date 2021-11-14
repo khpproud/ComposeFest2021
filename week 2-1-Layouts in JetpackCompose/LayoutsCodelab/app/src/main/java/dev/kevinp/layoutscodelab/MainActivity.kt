@@ -12,11 +12,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.BottomNavigation
 import androidx.compose.material.ContentAlpha
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.House
+import androidx.compose.material.icons.twotone.AddAPhoto
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
@@ -32,15 +41,58 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             LayoutsCodelabTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Greeting("Android")
+                LayoutsCodelab()
+            }
+        }
+    }
+}
+
+@Composable
+fun LayoutsCodelab() {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text("LayoutsCodelab!")
+                },
+                actions = {
+                    IconButton(onClick = { }) {
+                        Icon(Icons.Filled.Favorite, contentDescription = null)
+                    }
+                    IconButton(onClick = { }) {
+                        Icon(Icons.TwoTone.AddAPhoto, contentDescription = null)
+                    }
+                }
+            )
+        },
+        bottomBar = {
+            BottomNavigation {
+                IconButton(onClick = { }) {
+                    Icon(Icons.Outlined.House, contentDescription = null)
                 }
             }
         }
+    ) { innerPadding ->
+        BodyContent(
+            Modifier
+                .padding(innerPadding)
+                .padding(8.dp))
+    }
+}
+
+@Composable
+private fun BodyContent(modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
+        Text(text = "Hi there!")
+        Text(text = "Thanks for going through the Layouts codelab!")
+    }
+}
+
+@Preview
+@Composable
+fun LayoutsCodelabPreview() {
+    LayoutsCodelabTheme {
+        LayoutsCodelab()
     }
 }
 
@@ -50,7 +102,7 @@ fun PhotographerCard(modifier: Modifier = Modifier) {
         .padding(8.dp)
         .clip(RoundedCornerShape(4.dp))
         .background(MaterialTheme.colors.surface)
-        .clickable(onClick = {  })
+        .clickable(onClick = { })
         .padding(16.dp)
     ) {
         Surface(
@@ -80,18 +132,5 @@ fun PhotographerCard(modifier: Modifier = Modifier) {
 fun PhotographerCardPreview() {
     LayoutsCodelabTheme {
         PhotographerCard()
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    LayoutsCodelabTheme {
-        Greeting("Android")
     }
 }
