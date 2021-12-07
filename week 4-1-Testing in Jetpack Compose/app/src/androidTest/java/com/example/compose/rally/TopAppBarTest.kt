@@ -1,5 +1,9 @@
 package com.example.compose.rally
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -38,6 +42,35 @@ class TopAppBarTest {
                 useUnmergedTree = true
             )
             .assertExists()
+    }
+
+    @Test
+    fun rallyTopAppBar_clickBills_isSelectedBills() {
+        val allScreens = RallyScreen.values().toList()
+        var currentScreen by mutableStateOf(RallyScreen.Overview)
+
+        composeTestRule.setContent {
+            RallyTopAppBar(
+                allScreens = allScreens,
+                onTabSelected = { screen -> currentScreen = screen },
+                currentScreen = currentScreen
+            )
+        }
+
+        composeTestRule
+            .onNodeWithContentDescription(RallyScreen.Overview.name)
+            .assertIsSelected()
+
+        composeTestRule
+            .onNodeWithContentDescription(RallyScreen.Bills.name)
+            .assertHasClickAction()
+            .performClick()
+
+        composeTestRule.onRoot(useUnmergedTree = true).printToLog("currentLabelExists")
+
+        composeTestRule
+            .onNodeWithContentDescription(RallyScreen.Bills.name)
+            .assertIsSelected()
     }
 
 }
