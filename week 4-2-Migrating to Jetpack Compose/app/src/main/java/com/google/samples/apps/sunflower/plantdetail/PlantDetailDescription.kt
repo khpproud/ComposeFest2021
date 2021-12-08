@@ -16,7 +16,9 @@
 
 package com.google.samples.apps.sunflower.plantdetail
 
+import android.graphics.Color
 import android.text.method.LinkMovementMethod
+import android.util.Log
 import android.widget.TextView
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -145,6 +147,7 @@ private fun PlantDescription(description: String) {
         },
         update = {
             it.text = htmlDescription
+            it.setTextColor(Color.BLACK)
         }
     )
 }
